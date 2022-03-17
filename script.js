@@ -12,8 +12,8 @@ const sudoku = [
   ["-", "-", 2, 4, 5, 9, "-", "-", "-"],
 ];
 
-let rowNumber = 2; //0...8
-let columnNumber = 3; //0...8
+let rowNumber = 0; //0...8
+let columnNumber = 0; //0...8
 
 let row = sudoku[rowNumber];
 
@@ -72,6 +72,7 @@ const blocks = new Map([
 // check block number of point (x/y)
 const giveBlockNum = function () {
   let block;
+
   if (rowNumber <= 2 && columnNumber <= 2) block = "block1";
   else if (rowNumber <= 2 && columnNumber <= 5) block = "block2";
   else if (rowNumber <= 2 && columnNumber <= 8) block = "block3";
@@ -83,7 +84,7 @@ const giveBlockNum = function () {
   else if (columnNumber <= 8) block = "block9";
   return block;
 };
-console.log(giveBlockNum());
+//console.log(giveBlockNum());
 
 // Rules
 
@@ -98,11 +99,10 @@ const columnAdd = column
   .reduce((acc, curr) => acc + curr);
 
 // 3. sum in each block must be 45
-const blockSum = () => {
-  return blocks
-    .get(giveBlockNum())
-    .filter((c) => typeof c === "number")
-    .reduce((acc, curr) => acc + curr);
+const blockSum = function () {
+  let b = blocks.get(giveBlockNum()).filter((c) => typeof c === "number");
+  if (!b.length) return 0;
+  return b.reduce((acc, curr) => acc + curr);
 };
 // console.log(blockSum());
 
@@ -118,30 +118,39 @@ const blockSet = new Set(
 );
 
 // check, if rules are true
-const test = (blockNumber) => {
+const test = function (blockNumber) {
   if (rowAdd <= 45 && columnAdd <= 45 && blockSum(blockNumber) <= 45)
     console.log("tests passed");
 };
-
+console.log(sudoku.slice(0, 1) + sudoku.slice(2, 8));
 // change value of sudoku[x][y]
-const changeValue = (x, y, num) => {
-  return (
+const changeValue = function (x, y, num) {
+  if (y != 0) {
+    sudoku = sudoku.slice(0, y);
     sudoku[y].slice(0, x - 1) +
-    num.toString() +
-    "," +
-    sudoku[y].slice(x + 1, sudoku[y].length)
-  );
+      num.toString() +
+      "," +
+      sudoku[y].slice(x + 1, sudoku[y].length);
+  }
 };
-
+//console.log(sudoku.length);
 for (let x = 0; x < sudoku.length; x++) {
   for (let y = 0; y < sudoku.length; y++) {
-    if (sudoku[y].splice(x, 1) === "-") {
-      sudoku = changeValue(x, y, num++);
-    }
-    console.log([rowAdd <= 45, columnAdd <= 45, blockSum(giveBlockNum())]);
-    columnNumber++;
     console.log(columnNumber, rowNumber, giveBlockNum());
+    console.log([rowAdd <= 45, columnAdd <= 45, blockSum(giveBlockNum())]);
+    console.log(x, y, sudoku[x][y] === "-");
+    // if (sudoku[y].splice(x, 1) === "-") {
+    //   sudoku = changeValue(x, y, num++);
+    //   console.log(sudoku);
+    // }
+    columnNumber++;
+    if (columnNumber === 9) {
+      columnNumber = 0;
+      break;
+    }
   }
   rowNumber++;
-  console.log(x, sudoku.length, rowNumber);
+  if (rowNumber === 9) {
+    break;
+  }
 }
