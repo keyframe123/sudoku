@@ -1,6 +1,6 @@
 "use strict";
 
-const sudoku = [
+let sudoku = [
   ["-", "-", "-", 8, 9, 4, 6, "-", "-"],
   ["-", 2, "-", "-", 6, 7, "-", 3, "-"],
   [7, "-", "-", 2, "-", "-", "-", "-", "-"],
@@ -28,6 +28,38 @@ let column = [
   sudoku[7][columnNumber],
   sudoku[8][columnNumber],
 ];
+
+const rowSets = [
+  new Set(8, 9, 4, 6),
+  new Set(),
+  new Set(),
+  new Set(),
+  new Set(),
+  new Set(),
+  new Set(),
+  new Set(),
+  new Set(),
+];
+
+// put values in html
+// let cells = document.querySelectorAll("table tr td");
+// console.log(cells);
+// for (let column = 0; column < sudoku.length; column++) {
+//   for (let row = 0; row < sudoku.length; row++) {
+//     sudoku[column][row]
+//     // go one column down
+//     columnNumber++;
+//     if (columnNumber === 9) {
+//       columnNumber = 0;
+//       break;
+//     }
+//   }
+//   // go one row down
+//   rowNumber++;
+//   if (rowNumber === 9) {
+//     break;
+//   }
+// }
 
 // Blocks
 const blocks = new Map([
@@ -104,16 +136,15 @@ const blockSum = function () {
   if (!b.length) return 0;
   return b.reduce((acc, curr) => acc + curr);
 };
-// console.log(blockSum());
 
 // in each row, the number occurs only once (Set)
-const rowSet = new Set(row.filter((c) => typeof c === "number"));
+let rowSet = new Set(row.filter((c) => typeof c === "number"));
 
 // in each column, the number occurs only once (Set)
-const columnSet = new Set(column.filter((c) => typeof c === "number"));
+let columnSet = new Set(column.filter((c) => typeof c === "number"));
 
 // in each block, the number occurs only once (Set)
-const blockSet = new Set(
+let blockSet = new Set(
   blocks.get(giveBlockNum()).filter((c) => typeof c === "number")
 );
 
@@ -122,35 +153,64 @@ const test = function (blockNumber) {
   if (rowAdd <= 45 && columnAdd <= 45 && blockSum(blockNumber) <= 45)
     console.log("tests passed");
 };
-console.log(sudoku.slice(0, 1) + sudoku.slice(2, 8));
-// change value of sudoku[x][y]
-const changeValue = function (x, y, num) {
-  if (y != 0) {
-    sudoku = sudoku.slice(0, y);
-    sudoku[y].slice(0, x - 1) +
-      num.toString() +
-      "," +
-      sudoku[y].slice(x + 1, sudoku[y].length);
-  }
+// console.log(sudoku.slice(0, 1) + sudoku.slice(2, 8));
+
+const checkRow = (number, value) => {
+  const set = rowSets[number];
+  return !set.has(value);
 };
+const checkColumn = (number) => {};
+const checkBlock = (number) => {};
+
 //console.log(sudoku.length);
-for (let x = 0; x < sudoku.length; x++) {
-  for (let y = 0; y < sudoku.length; y++) {
-    console.log(columnNumber, rowNumber, giveBlockNum());
-    console.log([rowAdd <= 45, columnAdd <= 45, blockSum(giveBlockNum())]);
-    console.log(x, y, sudoku[x][y] === "-");
-    // if (sudoku[y].splice(x, 1) === "-") {
-    //   sudoku = changeValue(x, y, num++);
-    //   console.log(sudoku);
-    // }
+for (let column = 0; column < sudoku.length; column++) {
+  for (let row = 0; row < sudoku.length; row++) {
+    // console.log(columnNumber, rowNumber, giveBlockNum());
+    console.log(
+      rowAdd <= 45 && columnAdd <= 45 && blockSum(giveBlockNum()) <= 45
+    );
+
+    // if value is empty, set value
+    if (sudoku[row][column] === "-") {
+      sudoku[row][column] = 1;
+      // console.log(new Set(sudoku[row].filter((c) => typeof c === "number")));
+      if (rowAdd > 45 || columnAdd > 45 || blockSum(giveBlockNum()) > 45)
+        sudoku[row][column] = 2;
+      if (rowAdd > 45 || columnAdd > 45 || blockSum(giveBlockNum()) > 45)
+        sudoku[row][column] = 3;
+      if (rowAdd > 45 || columnAdd > 45 || blockSum(giveBlockNum()) > 45)
+        sudoku[row][column] = 4;
+      if (rowAdd > 45 || columnAdd > 45 || blockSum(giveBlockNum()) > 45)
+        sudoku[row][column] = 5;
+      if (rowAdd > 45 || columnAdd > 45 || blockSum(giveBlockNum()) > 45)
+        sudoku[row][column] = 6;
+      if (rowAdd > 45 || columnAdd > 45 || blockSum(giveBlockNum()) > 45)
+        sudoku[row][column] = 7;
+      if (rowAdd > 45 || columnAdd > 45 || blockSum(giveBlockNum()) > 45)
+        sudoku[row][column] = 8;
+      if (rowAdd > 45 || columnAdd > 45 || blockSum(giveBlockNum()) > 45)
+        sudoku[row][column] = 9;
+    }
+    console.log(
+      new Set(sudoku[row].filter((c) => typeof c === "number")).size === 9
+    );
+    console.log(
+      new Set(sudoku[column].filter((c) => typeof c === "number")).size === 9
+    );
+    console.log(
+      new Set(blocks.get(giveBlockNum()).filter((c) => typeof c === "number"))
+    );
+    // go one column down
     columnNumber++;
     if (columnNumber === 9) {
       columnNumber = 0;
       break;
     }
   }
+  // go one row down
   rowNumber++;
   if (rowNumber === 9) {
     break;
   }
 }
+console.log(sudoku);

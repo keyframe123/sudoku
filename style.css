@@ -1,0 +1,43 @@
+table {
+  margin: 1em auto;
+}
+td {
+  text-align: center;
+}
+td:first-child {
+  border-left: solid;
+}
+td:nth-child(3n) {
+  border-right: solid;
+}
+tr:first-child {
+  border-top: solid;
+}
+tr:nth-child(3n) td {
+  border-bottom: solid;
+}
+
+#grid {
+  width: 400px;
+  height: 400px;
+
+  margin-left: 20px;
+  margin-top: 50px;
+
+  border: 3px solid #000000;
+}
+.cell {
+  padding: 0;
+}
+
+.cell input {
+  display: inline-block;
+  float: left;
+
+  border: 1px solid black;
+  width: 40px;
+  height: 40px;
+
+  text-align: center;
+  font-size: 30px;
+}
