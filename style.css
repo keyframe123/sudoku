@@ -1,8 +1,6 @@
-table {
-  margin: 1em auto;
-}
 td {
   text-align: center;
+  font-size: 30px;
 }
 td:first-child {
   border-left: solid;
@@ -16,28 +14,36 @@ tr:first-child {
 tr:nth-child(3n) td {
   border-bottom: solid;
 }
+.input {
+  padding: 0 0 0 0;
+  width: 59px;
+  font-size: 52px;
+  text-align: center;
+  border-style: none;
+}
+.buttons {
+  display: flex;
+  flex-direction: row-reverse;
+  margin: 0 0 0 20px;
+  width: 600px;
+  height: 45px;
+}
+.solve {
+  font-size: 25px;
+  background-color: rgb(236, 123, 142);
+}
+
+.reset {
+  font-size: 25px;
+  background-color: rgb(103, 213, 189);
+}
+
+.hide {
+  display: none;
+}
 
 #grid {
-  width: 400px;
-  height: 400px;
-
-  margin-left: 20px;
-  margin-top: 50px;
-
-  border: 3px solid #000000;
-}
-.cell {
-  padding: 0;
-}
-
-.cell input {
-  display: inline-block;
-  float: left;
-
-  border: 1px solid black;
-  width: 40px;
-  height: 40px;
-
-  text-align: center;
-  font-size: 30px;
+  width: 600px;
+  height: 600px;
+  margin: 50px 0 0 20px;
 }
