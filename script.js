@@ -37,7 +37,7 @@ let solved;
 for (let i = 0; i <= 8; i++) {
   let html;
   for (let j = 0; j <= 8; j++) {
-    html = `<td class="cell${j}"><input class="input input${j}" type="number" maxlength="1" value=""></td>`;
+    html = `<td class="cell${j}"><input class="input input${j}" type="number" min="1" max="9" value=""></td>`;
     rows[i].innerHTML += html;
   }
 }
@@ -137,16 +137,12 @@ const solve = () => {
 
 // if input is not correct, print error message
 const checkAll = () => {
-  const set = new Set();
   for (let row = 0; row < 9; row++) {
     for (let column = 0; column < 9; column++) {
-      if (checkBlock(row, column) && checkRow(row) && checkColumn(column)) {
-        set.add(true);
-      } else set.add(false);
+      if (!checkBlock(row, column) || !checkRow(row) || !checkColumn(column)) {
+        return false;
+      }
     }
-  }
-  if (set.size === 2) {
-    return false;
   }
   return true;
 };
