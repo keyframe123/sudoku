@@ -1,25 +1,36 @@
+body {
+  background-color: rgb(18, 23, 23);
+}
 td {
   text-align: center;
   font-size: 30px;
+  border-color: white;
 }
 td:first-child {
   border-left: solid;
+  border-color: white;
 }
 td:nth-child(3n) {
   border-right: solid;
+  border-color: white;
 }
 tr:first-child {
   border-top: solid;
+  border-color: white;
 }
 tr:nth-child(3n) td {
   border-bottom: solid;
+  border-color: white;
 }
 .input {
   padding: 0 0 0 0;
-  width: 59px;
+  width: 64px;
+  height: 64px;
   font-size: 52px;
   text-align: center;
   border-style: none;
+  background-color: rgb(51, 51, 51);
+  color: white;
 }
 .buttons {
   display: flex;
@@ -38,8 +49,13 @@ tr:nth-child(3n) td {
   background-color: rgb(103, 213, 189);
 }
 
-.hide {
-  display: none;
+.freeze {
+  font-size: 25px;
+  background-color: rgb(124, 127, 236);
+}
+
+.cell {
+  padding: 0 0 0 0;
 }
 
 #grid {

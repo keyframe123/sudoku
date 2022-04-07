@@ -16,28 +16,15 @@ const rows = [
   document.querySelector(".row9"),
 ];
 
-let sudoku;
-
-// let sudokuTest = [
-//   [0, 0, 0, 8, 9, 4, 6, 0, 0],
-//   [0, 2, 0, 0, 6, 7, 0, 3, 0],
-//   [7, 0, 0, 2, 0, 0, 0, 0, 0],
-//   [3, 9, 0, 0, 0, 0, 1, 0, 4],
-//   [4, 8, 0, 0, 0, 0, 0, 2, 6],
-//   [2, 0, 7, 0, 0, 0, 0, 9, 5],
-//   [0, 0, 0, 0, 0, 1, 0, 0, 7],
-//   [0, 3, 0, 7, 2, 0, 0, 4, 0],
-//   [0, 0, 2, 4, 5, 9, 0, 0, 0],
-// ];
-
+let sudoku, solved, columnSave, rowSave;
+let duplicates = [];
 // const original = JSON.parse(JSON.stringify(sudokuTest));
-let solved;
 
 // dynamically insert rows
 for (let i = 0; i <= 8; i++) {
   let html;
   for (let j = 0; j <= 8; j++) {
-    html = `<td class="cell${j}"><input class="input input${j}" type="number" min="1" max="9" value=""></td>`;
+    html = `<td class="cell cell${j}"><input class="input input${j}" type="number" min="1" max="9" value=""></td>`;
     rows[i].innerHTML += html;
   }
 }
@@ -45,26 +32,42 @@ for (let i = 0; i <= 8; i++) {
 // inserts sudoku array in HTML
 const resetSudoku = () => {
   for (let row = 0; row < 9; row++) {
-    // console.group(`row${row}`);
     for (let column = 0; column < 9; column++) {
       rows[row].childNodes[column].childNodes[0].value = "";
     }
-    // console.groupEnd();
   }
 };
-//insertSudoku(true);
 
 // checks, if row is correct
 const checkRow = (row) => {
+  const arr = [];
   let count = 0;
   const set = new Set();
   for (let column = 0; column < 9; column++) {
+    // for marking
+    arr.push([rows[row].childNodes[column].childNodes[0].value, row, column]);
+    // console.log(arr);
+    // for checking
     if (rows[row].childNodes[column].childNodes[0].value === "") {
       continue;
     }
+    // for checking
     set.add(rows[row].childNodes[column].childNodes[0].value);
     count++;
   }
+  // for marking
+  for (let x = 1; x <= 9; x++) {
+    arr.forEach((element) => {
+      // console.log(element);
+      if (element[0] === `${x}`) {
+        duplicates.push([x, element[1], element[2]]);
+      }
+    });
+  }
+  // console.log(duplicates);
+  // rowSave = row;
+  // console.log(duplicates);
+  // for checking
   if (set.size < count) {
     return false;
   }
@@ -73,15 +76,32 @@ const checkRow = (row) => {
 
 // checks, if column is correct
 const checkColumn = (column) => {
+  const arr = [];
   let count = 0;
   const set = new Set();
   for (let row = 0; row < 9; row++) {
+    // for marking
+    arr.push([rows[row].childNodes[column].childNodes[0].value, row, column]);
+    // console.log(arr);
+    // for checking
     if (rows[row].childNodes[column].childNodes[0].value === "") {
       continue;
     }
+    // for checking
     set.add(rows[row].childNodes[column].childNodes[0].value);
     count++;
   }
+  // for marking
+  for (let x = 1; x <= 9; x++) {
+    arr.forEach((element) => {
+      if (element[0] === `${x}`) duplicates.push([x, element[1], element[2]]);
+    });
+  }
+
+  // console.log(duplicates);
+  // columnSave = column;
+  // console.log(duplicates);
+  // for checking
   if (set.size < count) {
     return false;
   }
@@ -90,6 +110,7 @@ const checkColumn = (column) => {
 
 // checks, if block is currect
 const checkBlock = (row, column) => {
+  const arr = [];
   let count = 0;
   const set = new Set();
   const blockRow = Math.floor(row / 3) * 3;
@@ -97,17 +118,48 @@ const checkBlock = (row, column) => {
 
   for (let row = blockRow; row < blockRow + 3; row++) {
     for (let column = blockColumn; column < blockColumn + 3; column++) {
+      // for marking
+      arr.push([rows[row].childNodes[column].childNodes[0].value, row, column]);
+      // console.log(arr);
+      // for checking
       if (rows[row].childNodes[column].childNodes[0].value === "") {
         continue;
       }
+      // for checking
       set.add(rows[row].childNodes[column].childNodes[0].value);
       count++;
     }
   }
+  // for marking
+  for (let x = 1; x <= 9; x++) {
+    arr.forEach((element) => {
+      if (element[0] === `${x}`) {
+        duplicates.push([x, element[1], element[2]]);
+      }
+    });
+  }
+  // console.log(duplicates);
+  // for checking
   if (set.size < count) {
     return false;
   }
   return true;
+};
+
+const mark = () => {
+  // if (flag === "row") {
+  for (let i = 0; i < duplicates.length - 1; i++) {
+    if (duplicates[i][0] === duplicates[i + 1][0]) {
+      document
+        .querySelector(`.row${duplicates[i][1] + 1}`)
+        .querySelector(`.input${duplicates[i][2]}`).style.backgroundColor =
+        "red";
+      document
+        .querySelector(`.row${duplicates[i + 1][1] + 1}`)
+        .querySelector(`.input${duplicates[i + 1][2]}`).style.backgroundColor =
+        "red";
+    }
+  }
 };
 
 // solve sudoku
@@ -137,44 +189,68 @@ const solve = () => {
 
 // if input is not correct, print error message
 const checkAll = () => {
+  let flag = true;
   for (let row = 0; row < 9; row++) {
     for (let column = 0; column < 9; column++) {
-      if (!checkBlock(row, column) || !checkRow(row) || !checkColumn(column)) {
-        return false;
+      if (!checkBlock(row, column)) {
+        mark();
+        duplicates = [];
+        flag = false;
       }
+      if (!checkRow(row)) {
+        mark();
+        duplicates = [];
+        flag = false;
+      }
+      if (!checkColumn(column)) {
+        mark();
+        duplicates = [];
+        flag = false;
+      }
+      if (!flag) return false;
     }
   }
   return true;
 };
 
+// freeze when value is not empty
+const freeze = () => {
+  for (let row = 0; row < 9; row++) {
+    for (let column = 0; column < 9; column++) {
+      if (rows[row].childNodes[column].childNodes[0].value != "") {
+        rows[row].childNodes[column].childNodes[0].readOnly = true;
+      }
+    }
+  }
+};
+
 buttonSolve.addEventListener("click", function () {
   if (checkAll()) solve();
-  else alert("not solvable");
-  // sudokuTest = JSON.parse(JSON.stringify(sudokuTest));
 });
 
 buttonReset.addEventListener("click", function () {
-  // sudokuTest = original;
-  // console.log(original);
+  for (let row = 0; row < 9; row++) {
+    for (let column = 0; column < 9; column++) {
+      rows[row].childNodes[column].childNodes[0].readOnly = false;
+    }
+  }
   resetSudoku(false);
+  for (let row = 0; row < 9; row++) {
+    for (let column = 0; column < 9; column++) {
+      document
+        .querySelector(`.row${row + 1}`)
+        .querySelector(`.input${column}`).style.backgroundColor =
+        " rgb(51, 51, 51)";
+    }
+  }
+  duplicates = [];
 });
 
-// for (let row = 0; row < 9; row++) {
-//   for (let column = 0; column < 9; column++) {
-//     if ((rows[row].childNodes[column].childNodes[0].value === "0")) {
-//       // .input add class .hide
-//       rows[row].childNodes[column].childNodes[0].value.classList.add("hide");
-//     }
-//   }
-// }
-// submitButton.addEventListener("click", function () {
-//   let test = [];
-//   for (let i = 0; i <= 8; i++) {
-//     test.push(inputLines[`${i}`].value.split("").map(Number));
-//   }
-//   console.log(test);
-
-//   sudokuTest = test;
-//   console.log(sudokuTest);
-//   insertSudoku();
-// });
+document.querySelectorAll("input").forEach((el) => {
+  el.addEventListener("change", () => {
+    checkAll();
+  });
+  el.addEventListener("keyup", () => {
+    checkAll();
+  });
+});
