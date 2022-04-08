@@ -2,6 +2,8 @@
 
 const buttonSolve = document.querySelector(".solve");
 const buttonReset = document.querySelector(".reset");
+const buttonFreeze = document.querySelector(".freeze");
+const buttonHint = document.querySelector(".hint");
 const inputFields = document.querySelector(".input");
 
 const rows = [
@@ -16,9 +18,9 @@ const rows = [
   document.querySelector(".row9"),
 ];
 
-let sudoku, solved, columnSave, rowSave;
+let sudoku;
+let savedPos = [];
 let duplicates = [];
-// const original = JSON.parse(JSON.stringify(sudokuTest));
 
 // dynamically insert rows
 for (let i = 0; i <= 8; i++) {
@@ -29,7 +31,7 @@ for (let i = 0; i <= 8; i++) {
   }
 }
 
-// inserts sudoku array in HTML
+// resets sudoku
 const resetSudoku = () => {
   for (let row = 0; row < 9; row++) {
     for (let column = 0; column < 9; column++) {
@@ -46,7 +48,6 @@ const checkRow = (row) => {
   for (let column = 0; column < 9; column++) {
     // for marking
     arr.push([rows[row].childNodes[column].childNodes[0].value, row, column]);
-    // console.log(arr);
     // for checking
     if (rows[row].childNodes[column].childNodes[0].value === "") {
       continue;
@@ -64,9 +65,6 @@ const checkRow = (row) => {
       }
     });
   }
-  // console.log(duplicates);
-  // rowSave = row;
-  // console.log(duplicates);
   // for checking
   if (set.size < count) {
     return false;
@@ -97,10 +95,6 @@ const checkColumn = (column) => {
       if (element[0] === `${x}`) duplicates.push([x, element[1], element[2]]);
     });
   }
-
-  // console.log(duplicates);
-  // columnSave = column;
-  // console.log(duplicates);
   // for checking
   if (set.size < count) {
     return false;
@@ -213,14 +207,91 @@ const checkAll = () => {
   return true;
 };
 
-// freeze when value is not empty
-const freeze = () => {
-  for (let row = 0; row < 9; row++) {
-    for (let column = 0; column < 9; column++) {
-      if (rows[row].childNodes[column].childNodes[0].value != "") {
-        rows[row].childNodes[column].childNodes[0].readOnly = true;
+document.querySelectorAll("input").forEach((el) => {
+  el.addEventListener("change", () => {
+    if (!checkAll());
+    if (checkAll()) {
+      for (let row = 0; row < 9; row++) {
+        for (let column = 0; column < 9; column++) {
+          document
+            .querySelector(`.row${row + 1}`)
+            .querySelector(`.input${column}`).style.backgroundColor =
+            " rgb(51, 51, 51)";
+        }
       }
     }
+  });
+});
+
+const showHint = () => {
+  let rowArr = [];
+  let original = [];
+  let count = 0;
+  let solvedPoint;
+  for (let row = 0; row < 9; row++) {
+    for (let column = 0; column < 9; column++) {
+      rowArr.push(rows[row].childNodes[column].childNodes[0].value);
+      count++;
+      if (count >= 9) {
+        original.push(rowArr);
+        rowArr = [];
+        count = 0;
+      }
+    }
+  }
+  saveFirstEmpty();
+  solve();
+  for (let row = 0; row < 9; row++) {
+    for (let column = 0; column < 9; column++) {
+      solvedPoint =
+        rows[savedPos[0]].childNodes[savedPos[1]].childNodes[0].value;
+    }
+  }
+  for (let row = 0; row < 9; row++) {
+    for (let column = 0; column < 9; column++) {
+      rows[row].childNodes[column].childNodes[0].value = original[row][column];
+    }
+  }
+  rows[savedPos[0]].childNodes[savedPos[1]].childNodes[0].value = solvedPoint;
+};
+
+const saveFirstEmpty = () => {
+  for (let row = 0; row < 9; row++) {
+    for (let column = 0; column < 9; column++) {
+      if (rows[row].childNodes[column].childNodes[0].value === "") {
+        savedPos = [row, column];
+        return true;
+      }
+    }
+  }
+};
+
+// freeze when value is not empty
+let freezeFlag = true;
+const freeze = () => {
+  if (freezeFlag) {
+    for (let row = 0; row < 9; row++) {
+      for (let column = 0; column < 9; column++) {
+        if (rows[row].childNodes[column].childNodes[0].value != "") {
+          rows[row].childNodes[column].childNodes[0].readOnly = true;
+        }
+      }
+    }
+    freezeFlag = false;
+    buttonFreeze.innerHTML = "Freeze on";
+    return false;
+  }
+  if (!freezeFlag) {
+    for (let row = 0; row < 9; row++) {
+      for (let column = 0; column < 9; column++) {
+        if (rows[row].childNodes[column].childNodes[0].value != "") {
+          rows[row].childNodes[column].childNodes[0].readOnly = false;
+        }
+      }
+    }
+    freezeFlag = true;
+    buttonFreeze.innerHTML = "Freeze off";
+    return true;
   }
 };
 
@@ -244,13 +315,13 @@ buttonReset.addEventListener("click", function () {
     }
   }
   duplicates = [];
+  savedPos = [];
 });
 
-document.querySelectorAll("input").forEach((el) => {
-  el.addEventListener("change", () => {
-    checkAll();
-  });
-  el.addEventListener("keyup", () => {
-    checkAll();
-  });
+buttonFreeze.addEventListener("click", function () {
+  freeze();
+});
+
+buttonHint.addEventListener("click", function () {
+  showHint();
 });

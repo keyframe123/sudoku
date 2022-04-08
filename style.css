@@ -1,9 +1,11 @@
 body {
   background-color: rgb(18, 23, 23);
+  margin: 40px 0 0 0;
 }
+
 td {
   text-align: center;
-  font-size: 30px;
+  /* font-size: 30px; */
   border-color: white;
 }
 td:first-child {
@@ -24,9 +26,9 @@ tr:nth-child(3n) td {
 }
 .input {
   padding: 0 0 0 0;
-  width: 64px;
-  height: 64px;
-  font-size: 52px;
+  width: 97px;
+  height: 97px;
+  font-size: 70px;
   text-align: center;
   border-style: none;
   background-color: rgb(51, 51, 51);
@@ -35,31 +37,110 @@ tr:nth-child(3n) td {
 .buttons {
   display: flex;
   flex-direction: row-reverse;
-  margin: 0 0 0 20px;
-  width: 600px;
-  height: 45px;
+  justify-content: center;
+  margin: auto;
+  width: 50%;
+  height: 60px;
 }
 .solve {
+  width: 226px;
   font-size: 25px;
   background-color: rgb(236, 123, 142);
 }
 
 .reset {
+  width: 226px;
   font-size: 25px;
   background-color: rgb(103, 213, 189);
 }
 
 .freeze {
+  width: 226px;
   font-size: 25px;
   background-color: rgb(124, 127, 236);
 }
 
-.cell {
-  padding: 0 0 0 0;
+.hint {
+  width: 226px;
+  font-size: 25px;
+  background-color: rgb(141, 236, 124);
 }
 
+/* .cell {
+  padding: 0 0 0 0;
+} */
+
 #grid {
-  width: 600px;
-  height: 600px;
-  margin: 50px 0 0 20px;
+  width: 30%;
+  margin: auto;
+}
+
+@media (max-width: 1280px) {
+  body {
+    margin-top: 20px;
+  }
+  .input {
+    width: 60px;
+    height: 60px;
+    font-size: 55px;
+  }
+  .buttons {
+    width: 45%;
+    height: 35px;
+  }
+  .solve {
+    font-size: 16px;
+  }
+
+  .reset {
+    font-size: 16px;
+  }
+
+  .freeze {
+    font-size: 16px;
+  }
+
+  .hint {
+    font-size: 16px;
+  }
+
+  #grid {
+    width: 40%;
+    height: 40%;
+  }
+}
+@media (max-width: 450px) {
+  body {
+    margin: 0 0 0 0;
+  }
+  .input {
+    width: 9.5vw;
+    height: 9.5vw;
+    font-size: 9vw;
+  }
+  .buttons {
+    width: 95%;
+    height: 30px;
+  }
+  .solve {
+    font-size: 4vw;
+  }
+
+  .reset {
+    font-size: 4vw;
+  }
+
+  .freeze {
+    font-size: 4vw;
+  }
+
+  .hint {
+    font-size: 4vw;
+  }
+
+  #grid {
+    margin-top: 3vh;
+    width: 95%;
+    height: 100px;
+  }
 }
