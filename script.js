@@ -26,7 +26,7 @@ let duplicates = [];
 for (let i = 0; i <= 8; i++) {
   let html;
   for (let j = 0; j <= 8; j++) {
-    html = `<td class="cell cell${j}"><input class="input input${j}" type="number" min="1" max="9" value=""></td>`;
+    html = `<td class="cell cell${j}"><input class="input input${j}" inputmode="numeric" type="number" min="1" max="9" value=""></td>`;
     rows[i].innerHTML += html;
   }
 }
